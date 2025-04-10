@@ -38,9 +38,10 @@ public class Answers {
         }
     }
 
-    public List<DeleteHistory> getDeleteHistories() {
-        return values.stream()
+    public DeleteHistories getDeleteHistories() {
+        List<DeleteHistory> deleteHistories = values.stream()
                 .map(DeleteHistory::of)
                 .collect(Collectors.toList());
+        return new DeleteHistories(deleteHistories);
     }
 }

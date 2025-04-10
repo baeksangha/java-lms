@@ -5,7 +5,6 @@ import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Question {
     private Long id;
@@ -91,18 +90,16 @@ public class Question {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
     }
 
-    public List<DeleteHistory> delete(NsUser loginUser) throws CannotDeleteException {
+    public void delete(NsUser loginUser) throws CannotDeleteException {
         if (!isOwner(loginUser)) {
             throw new CannotDeleteException("질문을 삭제할 권한이 없습니다.");
         }
         answers.checkOwner(loginUser);
         this.setDeleted(true);
         answers.delete();
+    }
 
-        List<DeleteHistory> deleteHistories = new ArrayList<>();
-        deleteHistories.add(DeleteHistory.of(this));
-        deleteHistories.addAll(answers.getDeleteHistories());
-
-        return deleteHistories;
+    public DeleteHistories getDeleteHistories() {
+        return new DeleteHistories(DeleteHistory.of(this), answers.getDeleteHistories());
     }
 }
